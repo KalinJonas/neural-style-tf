@@ -611,11 +611,16 @@ def minimize_with_adam(sess, net, optimizer, init_img, loss):
   sess.run(init_op)
   sess.run(net['input'].assign(init_img))
   iterations = 0
+  time_s = time.time()
   while (iterations < args.max_iterations):
     sess.run(train_op)
+    time_t = time.time()
     if iterations % args.print_iterations == 0 and args.verbose:
       curr_loss = loss.eval()
-      print("At iterate {}\tf=  {}".format(iterations, curr_loss))
+      print("{}s At iterate {}\tf=  {}".format(time_t - time_s, iterations, curr_loss))
+    elif iterations < 5 and args.verbose:
+      curr_loss = loss.eval()
+      print("{}s At iterate {}\tf=  {}".format(time_t - time_s, iterations, curr_loss))
     iterations += 1
 
 def get_optimizer(loss):
